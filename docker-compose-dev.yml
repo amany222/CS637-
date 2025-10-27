@@ -1,0 +1,27 @@
+version: '3.5'
+services:
+#  mongo:
+#    image: mongo:5.0-focal
+  core-minimal:
+    image: tcimba/sbos:minimal
+    build:
+      context: ../sbos-minimal
+      args:
+        DOCKER_BUILDKIT: 1
+    restart: no
+    entrypoint: [ "echo", "core-minimal is a dummy service for development" ]
+  core:
+    depends_on:
+      - core-minimal
+    environment:
+      DEBUG: true
+      CACHE: false
+      SERVER_WORKERS: 1
+#      FRONTEND_URL: http://localhost:8000
+    volumes:
+      - ./app_static:/root/sbos-playground/app_static
+      - ./sbos/playground:/root/sbos-playground/sbos/playground
+      - ../sbos-minimal/sbos/minimal:/root/sbos-minimal/sbos/minimal
+      - ./tests:/root/sbos-playground/tests
+      - ./benchmark:/root/sbos-playground/benchmark
+
